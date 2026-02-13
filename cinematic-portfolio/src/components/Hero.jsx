@@ -123,28 +123,76 @@ const Hero = () => {
         style={{ y: y2, opacity }}
         className="relative z-10 text-center px-4 sm:px-6 md:px-8 max-w-7xl mx-auto"
       >
-        {/* Text reveal - letter by letter */}
-        <h1 className="font-serif text-[clamp(2.5rem,10vw,10rem)] font-light tracking-tight leading-[0.9] mb-6 sm:mb-8 drop-shadow-2xl">
-          {letters.map((letter, index) => (
-            <motion.span
-              key={index}
-              initial={{ opacity: 0, y: 50, rotateX: -90 }}
-              animate={{ opacity: 1, y: 0, rotateX: 0 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.5 + index * 0.05, // Staggered reveal
-                ease: [0.33, 1, 0.68, 1]
-              }}
-              className="inline-block"
-              style={{ 
-                marginRight: letter === ' ' ? '0.5em' : '0',
-                transformOrigin: 'bottom'
-              }}
-            >
-              {letter === ' ' ? '\u00A0' : letter}
-            </motion.span>
-          ))}
-        </h1>
+        {/* Text reveal - letter by letter - NO WRAP + UNIQUE EFFECTS */}
+        <div className="relative inline-block mb-6 sm:mb-8">
+          <h1 className="font-serif text-[clamp(2rem,8vw,10rem)] font-light tracking-tight leading-[0.9] drop-shadow-2xl whitespace-nowrap">
+            {letters.map((letter, index) => {
+              const isSpace = letter === ' ';
+              const isFirstName = index < 5; // "ANMOL"
+              
+              return (
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0, y: 50, rotateX: -90 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.5 + index * 0.05,
+                    ease: [0.33, 1, 0.68, 1]
+                  }}
+                  className="inline-block relative"
+                  style={{ 
+                    marginRight: isSpace ? '0.5em' : '0',
+                    transformOrigin: 'bottom'
+                  }}
+                >
+                  {isSpace ? '\u00A0' : (
+                    <>
+                      <span className={isFirstName ? 'text-white' : 'text-gray-100'}>
+                        {letter}
+                      </span>
+                      {/* Unique: subtle glow on first name */}
+                      {isFirstName && (
+                        <motion.span
+                          className="absolute inset-0 text-electric-blue blur-sm opacity-0"
+                          animate={{ opacity: [0, 0.3, 0] }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            delay: index * 0.1 + 2
+                          }}
+                        >
+                          {letter}
+                        </motion.span>
+                      )}
+                    </>
+                  )}
+                </motion.span>
+              );
+            })}
+          </h1>
+          
+          {/* Unique: Animated underline that draws in */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1.2, delay: 1.3, ease: "easeInOut" }}
+            className="absolute -bottom-2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-electric-blue to-transparent origin-center"
+          />
+          
+          {/* Unique: Blinking cursor after name */}
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              delay: 1.5,
+              repeatDelay: 0.5
+            }}
+            className="inline-block w-[3px] h-[0.8em] bg-electric-blue ml-2 align-middle"
+          />
+        </div>
         
         <motion.p
           initial={{ opacity: 0, y: 30 }}

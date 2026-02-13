@@ -33,10 +33,10 @@ const LoadingScreen = ({ onLoadingComplete }) => {
       {/* Grain texture */}
       <div className="grain" />
       
-      {/* Centered name with letter-by-letter reveal */}
+      {/* Centered name with letter-by-letter reveal - NO WRAP */}
       {showName && (
-        <div className="relative z-10">
-          <motion.h1 className="font-serif text-[clamp(2rem,8vw,6rem)] font-light tracking-tight text-white">
+        <div className="relative z-10 px-4">
+          <motion.h1 className="font-serif text-[clamp(1.75rem,7vw,6rem)] font-light tracking-tight text-white whitespace-nowrap">
             {letters.map((letter, index) => (
               <motion.span
                 key={index}
