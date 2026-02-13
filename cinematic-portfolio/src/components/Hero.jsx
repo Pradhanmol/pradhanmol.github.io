@@ -83,14 +83,14 @@ const Hero = () => {
       <div className="grain" />
       
       {/* Slide indicators */}
-      <div className="absolute bottom-32 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+      <div className="absolute bottom-24 sm:bottom-32 left-1/2 -translate-x-1/2 flex gap-2 z-20">
         {heroImages.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentImageIndex(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-500 ${
+            className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-500 ${
               index === currentImageIndex 
-                ? 'bg-white w-8' 
+                ? 'bg-white w-6 sm:w-8' 
                 : 'bg-white/30 hover:bg-white/50'
             }`}
             aria-label={`Go to slide ${index + 1}`}
@@ -99,12 +99,12 @@ const Hero = () => {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 text-center px-6">
+      <div className="relative z-10 text-center px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.3, ease: [0.33, 1, 0.68, 1] }}
-          className="font-serif text-[clamp(3rem,12vw,10rem)] font-light tracking-tight leading-none mb-8 drop-shadow-2xl"
+          className="font-serif text-[clamp(2.5rem,10vw,10rem)] font-light tracking-tight leading-[0.9] mb-6 sm:mb-8 drop-shadow-2xl"
         >
           ANMOL PRADHAN
         </motion.h1>
@@ -113,23 +113,53 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.2, ease: [0.33, 1, 0.68, 1] }}
-          className="font-sans text-[clamp(1rem,2.5vw,1.5rem)] text-gray-200 tracking-[0.3em] uppercase drop-shadow-lg"
+          className="font-sans text-[clamp(0.75rem,2vw,1.5rem)] text-gray-200 tracking-[0.15em] sm:tracking-[0.3em] uppercase drop-shadow-lg mb-8 sm:mb-12"
         >
           Engineering systems that ship with confidence.
         </motion.p>
+        
+        {/* Life Quote - Prominent on Hero */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, delay: 1.8, ease: [0.33, 1, 0.68, 1] }}
+          className="max-w-3xl mx-auto"
+        >
+          <div className="relative">
+            {/* Decorative line before quote */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1, delay: 2.2 }}
+              className="absolute -top-4 left-1/2 -translate-x-1/2 h-[1px] w-16 sm:w-24 bg-white/30"
+            />
+            
+            <p className="font-serif text-[clamp(1rem,2.5vw,1.5rem)] text-white/90 italic leading-relaxed px-4 py-6 sm:py-8">
+              "A bird doesn't trust the branch it sits on — it trusts its own wings."
+            </p>
+            
+            {/* Decorative line after quote */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1, delay: 2.4 }}
+              className="absolute -bottom-4 left-1/2 -translate-x-1/2 h-[1px] w-16 sm:w-24 bg-white/30"
+            />
+          </div>
+        </motion.div>
       </div>
       
       {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 2 }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20"
+        transition={{ duration: 1, delay: 2.6 }}
+        className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-20"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="w-[1px] h-16 bg-gradient-to-b from-transparent via-white to-transparent"
+          className="w-[1px] h-12 sm:h-16 bg-gradient-to-b from-transparent via-white to-transparent"
         />
       </motion.div>
     </section>

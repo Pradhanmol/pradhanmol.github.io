@@ -8,7 +8,7 @@ const projects = [
     subtitle: 'AI Agents • Natural Language • Network Devices',
     description: 'An AI agent that turns intent into execution: selects the right router, maps test cases, runs them on real devices, and generates human + technical reports with failure analysis. Top 20 out of 80+ submissions.',
     color: '#0066FF',
-    image: '/images/DAR01010-EDIT-da7e06d3-c7b0-470b-b8dd-a0e7626cb042.png'
+    image: '/images/DAR00599-e49b48c8-512a-4c98-a247-680b1c9f5e0a.png'
   },
   {
     id: 2,
@@ -54,9 +54,9 @@ const ProjectPanel = ({ project, index }) => {
       style={{ opacity, scale }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative h-screen w-full flex items-center justify-center snap-start"
+      className="relative h-screen w-full flex items-center justify-center snap-start overflow-hidden"
     >
-      {/* Background image - MORE VISIBLE */}
+      {/* Background image - MORE VISIBLE & MOBILE OPTIMIZED */}
       {project.image && (
         <>
           <motion.div
@@ -64,12 +64,13 @@ const ProjectPanel = ({ project, index }) => {
             style={{
               backgroundImage: `url(${project.image})`,
               filter: 'grayscale(30%) brightness(0.65)',
+              backgroundPosition: 'center',
             }}
             initial={{ scale: 1 }}
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.8 }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/25 to-black/45" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
         </>
       )}
       
@@ -82,32 +83,32 @@ const ProjectPanel = ({ project, index }) => {
         style={{ backgroundColor: project.color }}
       />
       
-      {/* Content */}
-      <div className="relative z-10 max-w-5xl px-6 text-center">
+      {/* Content - MOBILE RESPONSIVE */}
+      <div className="relative z-10 max-w-5xl px-4 sm:px-6 md:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
-          className="space-y-6"
+          className="space-y-4 sm:space-y-6"
         >
-          <p className="font-sans text-sm text-gray-600 tracking-[0.3em] uppercase">
+          <p className="font-sans text-xs sm:text-sm text-gray-500 tracking-[0.2em] sm:tracking-[0.3em] uppercase">
             {String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
           </p>
           
-          <h2 className="font-serif text-[clamp(2rem,8vw,6rem)] font-light leading-none text-white drop-shadow-lg">
+          <h2 className="font-serif text-[clamp(1.75rem,6vw,6rem)] font-light leading-[0.95] text-white drop-shadow-lg px-2">
             {project.title}
           </h2>
           
-          <p className="font-sans text-[clamp(0.875rem,1.5vw,1rem)] text-gray-400 tracking-[0.2em] uppercase">
+          <p className="font-sans text-[clamp(0.7rem,1.5vw,1rem)] text-gray-400 tracking-[0.15em] sm:tracking-[0.2em] uppercase px-2">
             {project.subtitle}
           </p>
           
           <motion.p
             initial={{ opacity: 0 }}
-            animate={{ opacity: isHovered ? 1 : 0 }}
+            animate={{ opacity: isHovered ? 1 : 0.8 }}
             transition={{ duration: 0.5 }}
-            className="font-sans text-[clamp(1rem,2vw,1.25rem)] text-gray-300 leading-relaxed max-w-3xl mx-auto pt-8"
+            className="font-sans text-[clamp(0.95rem,1.8vw,1.25rem)] text-gray-300 leading-relaxed max-w-3xl mx-auto pt-4 sm:pt-8 px-4"
           >
             {project.description}
           </motion.p>
@@ -117,9 +118,9 @@ const ProjectPanel = ({ project, index }) => {
       {/* Decorative line */}
       <motion.div
         initial={{ scaleX: 0 }}
-        animate={{ scaleX: isHovered ? 1 : 0 }}
+        animate={{ scaleX: isHovered ? 1 : 0.3 }}
         transition={{ duration: 0.8 }}
-        className="absolute bottom-32 left-1/2 -translate-x-1/2 h-[1px] w-48 bg-white/20 origin-center"
+        className="absolute bottom-20 sm:bottom-32 left-1/2 -translate-x-1/2 h-[1px] w-32 sm:w-48 bg-white/20 origin-center"
       />
     </motion.div>
   );
@@ -129,7 +130,7 @@ const Work = () => {
   return (
     <section className="relative w-full">
       {/* Section intro */}
-      <div className="h-screen flex items-center justify-center px-6">
+      <div className="h-screen flex items-center justify-center px-4 sm:px-6 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -137,10 +138,10 @@ const Work = () => {
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="font-serif text-[clamp(2rem,6vw,4rem)] font-light mb-6">
+          <h2 className="font-serif text-[clamp(2rem,6vw,4rem)] font-light mb-4 sm:mb-6">
             Selected Work
           </h2>
-          <p className="font-sans text-gray-500 tracking-[0.2em] uppercase text-sm">
+          <p className="font-sans text-gray-500 tracking-[0.15em] sm:tracking-[0.2em] uppercase text-xs sm:text-sm">
             Projects that matter
           </p>
         </motion.div>

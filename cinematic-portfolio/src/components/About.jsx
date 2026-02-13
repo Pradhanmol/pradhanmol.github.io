@@ -12,36 +12,27 @@ const About = () => {
   const y = useTransform(scrollYProgress, [0, 0.5, 1], [100, 0, -100]);
 
   return (
-    <section ref={ref} className="relative min-h-screen w-full flex items-center justify-center px-6 py-32">
+    <section ref={ref} className="relative min-h-screen w-full flex items-center justify-center px-4 sm:px-6 md:px-8 py-20 sm:py-32">
       <motion.div
         style={{ opacity, y }}
-        className="max-w-4xl text-center space-y-12"
+        className="max-w-4xl text-center space-y-8 sm:space-y-12"
       >
         <motion.p
-          className="font-serif text-[clamp(1.5rem,4vw,3rem)] leading-relaxed text-gray-300"
+          className="font-serif text-[clamp(1.25rem,3.5vw,3rem)] leading-[1.4] text-gray-300 px-2"
         >
           I build test systems—and AI systems—that don't break under pressure.
         </motion.p>
         
         <motion.p
-          className="font-sans text-[clamp(1rem,2vw,1.25rem)] text-gray-500 leading-relaxed"
+          className="font-sans text-[clamp(0.95rem,1.8vw,1.25rem)] text-gray-500 leading-[1.7] px-2"
         >
           SDET at Deutsche Telekom Digital Labs, owning backend validation for One Broadband microservices across RDK and legacy stacks.
         </motion.p>
         
         <motion.p
-          className="font-sans text-[clamp(0.875rem,1.5vw,1rem)] text-gray-600 uppercase tracking-[0.2em]"
+          className="font-sans text-[clamp(0.75rem,1.3vw,1rem)] text-gray-600 uppercase tracking-[0.15em] sm:tracking-[0.2em] px-2"
         >
           TEST AUTOMATION • BACKEND QUALITY • GENAI / ML VALIDATION
-        </motion.p>
-        
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="font-serif text-[clamp(0.875rem,1.5vw,1.125rem)] text-gray-700 italic leading-relaxed pt-8"
-        >
-          — "A bird doesn't trust the branch it sits on — it trusts its own wings."
         </motion.p>
       </motion.div>
     </section>

@@ -27,19 +27,19 @@ const Navigation = () => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -20 }}
       transition={{ duration: 0.3 }}
-      className="fixed top-0 left-0 right-0 z-50 px-6 py-8"
+      className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 md:px-8 py-6 sm:py-8"
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <div className="max-w-7xl mx-auto flex justify-between items-center backdrop-blur-sm bg-black/20 px-4 sm:px-6 py-3 sm:py-4 rounded-full">
         <motion.button
           onClick={() => scrollToSection('hero')}
           whileHover={{ scale: 1.05 }}
-          className="font-serif text-xl font-light"
+          className="font-serif text-lg sm:text-xl font-light"
         >
           AP
         </motion.button>
         
         {/* Desktop Navigation */}
-        <div className="hidden md:flex gap-12 font-sans text-xs tracking-[0.3em] uppercase">
+        <div className="hidden md:flex gap-8 lg:gap-12 font-sans text-xs tracking-[0.3em] uppercase">
           <motion.button
             onClick={() => scrollToSection('work')}
             whileHover={{ color: '#ffffff' }}
@@ -69,7 +69,7 @@ const Navigation = () => {
           className="md:hidden text-gray-500 hover:text-white transition-colors"
         >
           <svg
-            className="w-6 h-6"
+            className="w-5 h-5 sm:w-6 sm:h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -99,24 +99,24 @@ const Navigation = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="md:hidden absolute top-full left-0 right-0 bg-deep-charcoal/95 backdrop-blur-lg border-t border-gray-900 mt-4"
+          className="md:hidden absolute top-full left-4 right-4 sm:left-6 sm:right-6 bg-deep-charcoal/95 backdrop-blur-lg border border-gray-900 mt-2 sm:mt-4 rounded-2xl overflow-hidden"
         >
-          <div className="flex flex-col gap-6 p-6 font-sans text-xs tracking-[0.3em] uppercase">
+          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 font-sans text-xs tracking-[0.3em] uppercase">
             <button
               onClick={() => scrollToSection('work')}
-              className="text-gray-500 hover:text-white transition-colors text-left"
+              className="text-gray-500 hover:text-white transition-colors text-left py-2"
             >
               Work
             </button>
             <button
               onClick={() => scrollToSection('experience')}
-              className="text-gray-500 hover:text-white transition-colors text-left"
+              className="text-gray-500 hover:text-white transition-colors text-left py-2"
             >
               Experience
             </button>
             <button
               onClick={() => scrollToSection('contact')}
-              className="text-gray-500 hover:text-white transition-colors text-left"
+              className="text-gray-500 hover:text-white transition-colors text-left py-2"
             >
               Contact
             </button>
