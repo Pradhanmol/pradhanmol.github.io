@@ -1,0 +1,41 @@
+# Documentation files that Jekyll is trying to process
+# (Keep deployment guides)
+cinematic-portfolio/CUSTOMIZATION.md
+cinematic-portfolio/ACTION_ITEMS.md
+cinematic-portfolio/BEFORE_AFTER*.md
+cinematic-portfolio/CHANGES_VERIFICATION.md
+cinematic-portfolio/CHECKLIST.md
+cinematic-portfolio/*_FIXES.md
+cinematic-portfolio/*_UPDATE*.md
+cinematic-portfolio/*_VISIBILITY*.md
+cinematic-portfolio/*_SLIDESHOW*.md
+cinematic-portfolio/PROJECT_SUMMARY.md
+
+# Build artifacts
+dist/
+build/
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
