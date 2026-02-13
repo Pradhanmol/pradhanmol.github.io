@@ -1,8 +1,9 @@
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 
 const Hero = () => {
   const sectionRef = useRef(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   
   // Hero background images
   const heroImages = [
@@ -16,6 +17,14 @@ const Hero = () => {
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
+  // Preload all images for smooth transitions
+  useEffect(() => {
+    heroImages.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+  
   // Auto-advance slides every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,15 +34,38 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, [heroImages.length]);
   
-  // Parallax depth effect
+  // UNIQUE: Mouse parallax effect
+  useEffect(() => {
+    const handleMouse = (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 30;
+      const y = (e.clientY / window.innerHeight - 0.5) * 30;
+      setMousePosition({ x, y });
+    };
+    
+    window.addEventListener('mousemove', handleMouse);
+    return () => window.removeEventListener('mousemove', handleMouse);
+  }, []);
+  
+  // Parallax depth effect with spring physics for smoothness
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"]
   });
   
-  const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]); // Background - slow
-  const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]); // Content - medium
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]); // Fade out on scroll
+  const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  
+  // Add spring physics for ultra-smooth movement
+  const y1Spring = useSpring(y1, { stiffness: 100, damping: 30, mass: 0.5 });
+  const y2Spring = useSpring(y2, { stiffness: 120, damping: 25 });
+  
+  // UNIQUE: Color shift on scroll (white to blue)
+  const nameColor = useTransform(
+    scrollYProgress,
+    [0, 0.3],
+    ['rgb(255, 255, 255)', 'rgb(100, 180, 255)']
+  );
   
   // Text reveal - split name into letters
   const name = "ANMOL PRADHAN";
@@ -41,28 +73,55 @@ const Hero = () => {
 
   return (
     <section ref={sectionRef} className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-      {/* Smooth crossfade images with Ken Burns effect (slow zoom) */}
-      <AnimatePresence initial={false}>
+      {/* SMOOTH: Crossfade with blur + Ken Burns effect */}
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={currentImageIndex}
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: `url(${heroImages[currentImageIndex]})`,
             filter: 'grayscale(40%) brightness(0.55)',
-            y: y1, // Parallax movement
+            y: y1Spring, // Spring physics for smooth parallax
+            willChange: 'transform, opacity, filter', // GPU optimization
           }}
-          initial={{ opacity: 0, scale: 1 }}
-          animate={{ opacity: 1, scale: 1.1 }} // Ken Burns zoom effect
-          exit={{ opacity: 0, scale: 1.15 }}
+          initial={{ opacity: 0, scale: 1, filter: 'blur(20px) grayscale(40%) brightness(0.55)' }}
+          animate={{ opacity: 1, scale: 1.1, filter: 'blur(0px) grayscale(40%) brightness(0.55)' }}
+          exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px) grayscale(40%) brightness(0.55)' }}
           transition={{ 
-            opacity: { duration: 1.5, ease: 'easeInOut' },
-            scale: { duration: 5, ease: 'linear' } // Slow zoom during display
+            opacity: { duration: 2, ease: [0.43, 0.13, 0.23, 0.96] }, // Custom bezier
+            scale: { duration: 5, ease: [0.25, 0.1, 0.25, 1] }, // Smooth Ken Burns
+            filter: { duration: 1.5, ease: 'easeOut' } // Blur transition
           }}
         />
       </AnimatePresence>
       
       {/* Cinematic overlay - balanced for visibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/35 to-black/55" />
+      
+      {/* UNIQUE: Floating particles for atmosphere */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {Array.from({ length: 15 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-electric-blue/30 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${100 + Math.random() * 20}%`,
+            }}
+            animate={{
+              y: [-50, -window.innerHeight - 50],
+              opacity: [0, 0.6, 0],
+              scale: [0, 1, 0]
+            }}
+            transition={{
+              duration: 4 + Math.random() * 3,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: 'linear'
+            }}
+          />
+        ))}
+      </div>
       
       {/* Subtle cinematic smoke/haze effect */}
       <div className="absolute inset-0 pointer-events-none">
@@ -118,14 +177,25 @@ const Hero = () => {
         ))}
       </div>
       
-      {/* Content with parallax */}
+      {/* Content with parallax + mouse tracking */}
       <motion.div 
-        style={{ y: y2, opacity }}
+        style={{ 
+          y: y2Spring, 
+          opacity,
+          x: mousePosition.x * 0.02, // UNIQUE: Subtle mouse parallax
+          rotateY: mousePosition.x * 0.01,
+          willChange: 'transform, opacity'
+        }}
         className="relative z-10 text-center px-4 sm:px-6 md:px-8 max-w-7xl mx-auto"
       >
         {/* Text reveal - letter by letter - NO WRAP + UNIQUE EFFECTS */}
         <div className="relative inline-block mb-6 sm:mb-8">
-          <h1 className="font-serif text-[clamp(2rem,8vw,10rem)] font-light tracking-tight leading-[0.9] drop-shadow-2xl whitespace-nowrap">
+          <motion.h1 
+            style={{ 
+              color: nameColor, // UNIQUE: Color shifts on scroll
+            }}
+            className="font-serif text-[clamp(2rem,8vw,10rem)] font-light tracking-tight leading-[0.9] drop-shadow-2xl whitespace-nowrap"
+          >
             {letters.map((letter, index) => {
               const isSpace = letter === ' ';
               const isFirstName = index < 5; // "ANMOL"
@@ -143,19 +213,22 @@ const Hero = () => {
                   className="inline-block relative"
                   style={{ 
                     marginRight: isSpace ? '0.5em' : '0',
-                    transformOrigin: 'bottom'
+                    transformOrigin: 'bottom',
+                    // UNIQUE: Mouse parallax per letter
+                    x: mousePosition.x * (0.01 + index * 0.003),
+                    y: mousePosition.y * (0.01 + index * 0.003),
                   }}
                 >
                   {isSpace ? '\u00A0' : (
                     <>
-                      <span className={isFirstName ? 'text-white' : 'text-gray-100'}>
+                      <span>
                         {letter}
                       </span>
-                      {/* Unique: subtle glow on first name */}
+                      {/* UNIQUE: Enhanced glow on first name */}
                       {isFirstName && (
                         <motion.span
                           className="absolute inset-0 text-electric-blue blur-sm opacity-0"
-                          animate={{ opacity: [0, 0.3, 0] }}
+                          animate={{ opacity: [0, 0.4, 0] }}
                           transition={{
                             duration: 3,
                             repeat: Infinity,
@@ -170,15 +243,29 @@ const Hero = () => {
                 </motion.span>
               );
             })}
-          </h1>
+          </motion.h1>
           
-          {/* Unique: Animated underline that draws in */}
+          {/* UNIQUE: Breathing glow underline */}
           <motion.div
             initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
+            animate={{ 
+              scaleX: 1,
+            }}
             transition={{ duration: 1.2, delay: 1.3, ease: "easeInOut" }}
-            className="absolute -bottom-2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-electric-blue to-transparent origin-center"
-          />
+            className="absolute -bottom-2 left-0 right-0 h-[2px] origin-center"
+          >
+            <motion.div
+              animate={{
+                boxShadow: [
+                  '0 0 10px rgba(0, 102, 255, 0.3)',
+                  '0 0 30px rgba(0, 102, 255, 0.6)',
+                  '0 0 10px rgba(0, 102, 255, 0.3)'
+                ]
+              }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-full h-full bg-gradient-to-r from-transparent via-electric-blue to-transparent rounded-full"
+            />
+          </motion.div>
           
           {/* Unique: Blinking cursor after name */}
           <motion.span
