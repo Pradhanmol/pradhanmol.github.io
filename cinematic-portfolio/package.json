@@ -3,21 +3,25 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "homepage": "https://pradhanmol.github.io",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "framer-motion": "^11.11.17",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "framer-motion": "^11.11.17"
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.0.7",
-    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.20",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.4.49",
-    "autoprefixer": "^10.4.20"
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.0.7"
   }
 }
