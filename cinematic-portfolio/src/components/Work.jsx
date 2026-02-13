@@ -56,7 +56,7 @@ const ProjectPanel = ({ project, index }) => {
       onMouseLeave={() => setIsHovered(false)}
       className="relative h-screen w-full flex items-center justify-center snap-start overflow-hidden"
     >
-      {/* Background image - MORE VISIBLE & MOBILE OPTIMIZED */}
+      {/* Background image with Ken Burns effect */}
       {project.image && (
         <>
           <motion.div
@@ -67,10 +67,22 @@ const ProjectPanel = ({ project, index }) => {
               backgroundPosition: 'center',
             }}
             initial={{ scale: 1 }}
-            animate={{ scale: isHovered ? 1.05 : 1 }}
-            transition={{ duration: 0.8 }}
+            animate={{ 
+              scale: isHovered ? 1.08 : 1.02,
+            }}
+            transition={{ 
+              duration: 0.8,
+              ease: "easeOut"
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
+          {/* Overlay with breathing effect */}
+          <motion.div 
+            className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"
+            animate={{
+              opacity: isHovered ? 0.95 : 1,
+            }}
+            transition={{ duration: 0.6 }}
+          />
         </>
       )}
       
@@ -115,12 +127,36 @@ const ProjectPanel = ({ project, index }) => {
         </motion.div>
       </div>
       
-      {/* Decorative line */}
+      {/* Decorative line with pulse */}
       <motion.div
         initial={{ scaleX: 0 }}
         animate={{ scaleX: isHovered ? 1 : 0.3 }}
         transition={{ duration: 0.8 }}
-        className="absolute bottom-20 sm:bottom-32 left-1/2 -translate-x-1/2 h-[1px] w-32 sm:w-48 bg-white/20 origin-center"
+        className="absolute bottom-20 sm:bottom-32 left-1/2 -translate-x-1/2 h-[1px] w-32 sm:w-48 origin-center"
+      >
+        <motion.div
+          className="w-full h-full bg-gradient-to-r from-transparent via-white to-transparent"
+          animate={{
+            opacity: isHovered ? [0.2, 0.5, 0.2] : 0.2,
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </motion.div>
+      
+      {/* Corner accent on hover */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isHovered ? 0.3 : 0 }}
+        className="absolute top-12 left-12 w-12 h-12 border-t border-l border-electric-blue/40"
+      />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isHovered ? 0.3 : 0 }}
+        className="absolute bottom-12 right-12 w-12 h-12 border-b border-r border-electric-blue/40"
       />
     </motion.div>
   );

@@ -1,7 +1,9 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
 
 const Hero = () => {
+  const sectionRef = useRef(null);
+  
   // Hero background images
   const heroImages = [
     '/images/DAR01010-EDIT-da7e06d3-c7b0-470b-b8dd-a0e7626cb042.png',
@@ -22,10 +24,24 @@ const Hero = () => {
     
     return () => clearInterval(interval);
   }, [heroImages.length]);
+  
+  // Parallax depth effect
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
+  });
+  
+  const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]); // Background - slow
+  const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]); // Content - medium
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]); // Fade out on scroll
+  
+  // Text reveal - split name into letters
+  const name = "ANMOL PRADHAN";
+  const letters = name.split('');
 
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-      {/* Smooth crossfade images - NO BLINKING */}
+    <section ref={sectionRef} className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      {/* Smooth crossfade images with Ken Burns effect (slow zoom) */}
       <AnimatePresence initial={false}>
         <motion.div
           key={currentImageIndex}
@@ -33,11 +49,15 @@ const Hero = () => {
           style={{
             backgroundImage: `url(${heroImages[currentImageIndex]})`,
             filter: 'grayscale(40%) brightness(0.55)',
+            y: y1, // Parallax movement
           }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.5, ease: 'easeInOut' }}
+          initial={{ opacity: 0, scale: 1 }}
+          animate={{ opacity: 1, scale: 1.1 }} // Ken Burns zoom effect
+          exit={{ opacity: 0, scale: 1.15 }}
+          transition={{ 
+            opacity: { duration: 1.5, ease: 'easeInOut' },
+            scale: { duration: 5, ease: 'linear' } // Slow zoom during display
+          }}
         />
       </AnimatePresence>
       
@@ -98,21 +118,38 @@ const Hero = () => {
         ))}
       </div>
       
-      {/* Content */}
-      <div className="relative z-10 text-center px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.3, ease: [0.33, 1, 0.68, 1] }}
-          className="font-serif text-[clamp(2.5rem,10vw,10rem)] font-light tracking-tight leading-[0.9] mb-6 sm:mb-8 drop-shadow-2xl"
-        >
-          ANMOL PRADHAN
-        </motion.h1>
+      {/* Content with parallax */}
+      <motion.div 
+        style={{ y: y2, opacity }}
+        className="relative z-10 text-center px-4 sm:px-6 md:px-8 max-w-7xl mx-auto"
+      >
+        {/* Text reveal - letter by letter */}
+        <h1 className="font-serif text-[clamp(2.5rem,10vw,10rem)] font-light tracking-tight leading-[0.9] mb-6 sm:mb-8 drop-shadow-2xl">
+          {letters.map((letter, index) => (
+            <motion.span
+              key={index}
+              initial={{ opacity: 0, y: 50, rotateX: -90 }}
+              animate={{ opacity: 1, y: 0, rotateX: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.5 + index * 0.05, // Staggered reveal
+                ease: [0.33, 1, 0.68, 1]
+              }}
+              className="inline-block"
+              style={{ 
+                marginRight: letter === ' ' ? '0.5em' : '0',
+                transformOrigin: 'bottom'
+              }}
+            >
+              {letter === ' ' ? '\u00A0' : letter}
+            </motion.span>
+          ))}
+        </h1>
         
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.2, ease: [0.33, 1, 0.68, 1] }}
+          transition={{ duration: 1, delay: 1.8, ease: [0.33, 1, 0.68, 1] }} // Delay after name completes
           className="font-sans text-[clamp(0.75rem,2vw,1.5rem)] text-gray-200 tracking-[0.15em] sm:tracking-[0.3em] uppercase drop-shadow-lg mb-8 sm:mb-12"
         >
           Engineering systems that ship with confidence.
@@ -122,7 +159,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, delay: 1.8, ease: [0.33, 1, 0.68, 1] }}
+          transition={{ duration: 1.5, delay: 2.4, ease: [0.33, 1, 0.68, 1] }} // After tagline
           className="max-w-3xl mx-auto"
         >
           <div className="relative">
@@ -130,7 +167,7 @@ const Hero = () => {
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 1, delay: 2.2 }}
+              transition={{ duration: 1, delay: 2.8 }}
               className="absolute -top-4 left-1/2 -translate-x-1/2 h-[1px] w-16 sm:w-24 bg-white/30"
             />
             
@@ -142,12 +179,12 @@ const Hero = () => {
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 1, delay: 2.4 }}
+              transition={{ duration: 1, delay: 3.0 }}
               className="absolute -bottom-4 left-1/2 -translate-x-1/2 h-[1px] w-16 sm:w-24 bg-white/30"
             />
           </div>
         </motion.div>
-      </div>
+      </motion.div>
       
       {/* Scroll indicator */}
       <motion.div

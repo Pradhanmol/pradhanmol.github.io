@@ -1,14 +1,35 @@
+import { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import Hero from './components/Hero';
 import About from './components/About';
 import Work from './components/Work';
 import Experience from './components/Experience';
 import Contact from './components/Contact';
 import Navigation from './components/Navigation';
+import LoadingScreen from './components/LoadingScreen';
+import ScrollProgress from './components/ScrollProgress';
+import CustomCursor from './components/CustomCursor';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
-    <div className="relative bg-deep-charcoal text-white">
-      <Navigation />
+    <>
+      {/* Loading Screen - Elegant entrance */}
+      <AnimatePresence>
+        {isLoading && (
+          <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* Custom Cursor Glow */}
+      <CustomCursor />
+      
+      {/* Scroll Progress Indicator */}
+      <ScrollProgress />
+      
+      <div className="relative bg-deep-charcoal text-white" style={{ cursor: 'none' }}>
+        <Navigation />
       
       <div id="hero">
         <Hero />
@@ -65,7 +86,8 @@ function App() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }
 
